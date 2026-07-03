@@ -1,31 +1,43 @@
 # Python
 __pycache__/
 *.py[cod]
-*.pyo
-*.pyd
+*$py.class
 
 # Virtual Environment
 .venv/
 venv/
 
-# Jupyter
-.ipynb_checkpoints/
+# Django
+db.sqlite3
+
+# Logs
+*.log
+results/logs/*.log
+
+# Environment Variables
+.env
 
 # VS Code
 .vscode/
 
-# Environment
-.env
+# Jupyter
+.ipynb_checkpoints/
 
-# Logs
-*.log
+# Python Packaging
+build/
+dist/
+*.egg-info/
 
-# Django
-db.sqlite3
-
-# OS
+# OS Files
 .DS_Store
 Thumbs.db
 
-# Temporary Results
-results/temp/
+# Pytest
+.pytest_cache/
+
+# Coverage
+.coverage
+htmlcov/
+
+# Git LFS Lock
+*.lock
