@@ -2,12 +2,13 @@ import cv2
 import numpy as np
 import time
 
+from inference.utils.logger import logger
+from inference.mqtt.instance import mqtt_client
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
 
-from inference.services.inference_engine import InferenceEngine
-
+from inference.services.instance import engine
 
 class InferenceAPIView(APIView):
     """
@@ -39,12 +40,21 @@ class InferenceAPIView(APIView):
                 cv2.IMREAD_COLOR
             )
 
-            engine = InferenceEngine()
-
             # Start timer
             start_time = time.perf_counter()
 
             result = engine.predict(image)
+            mqtt_client.publish(
+                 {
+                    "prediction": result["prediction"],
+                    "confidence": result["confidence"],
+                     "timestamp": time.strftime("%Y-%m-%d %H:%M:%S"),
+                }
+            )
+
+            logger.info(
+                f"Prediction={result['prediction']} Confidence={result['confidence']}"
+            )
 
             # Calculate processing time (milliseconds)
             processing_time = (time.perf_counter() - start_time) * 1000
@@ -61,7 +71,7 @@ class InferenceAPIView(APIView):
             )
 
         except Exception as e:
-
+            logger.exception(str(e))   
             return Response(
                 {
                     "status": "error",

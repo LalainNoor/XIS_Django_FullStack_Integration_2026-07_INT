@@ -2,14 +2,16 @@ import json
 
 from channels.generic.websocket import WebsocketConsumer
 
+from inference.utils.logger import logger
+
 
 class InferenceConsumer(WebsocketConsumer):
-    """
-    Handles WebSocket connections for live inference.
-    """
 
     def connect(self):
+
         self.accept()
+
+        logger.info("WebSocket Connected")
 
         self.send(
             text_data=json.dumps(
@@ -21,14 +23,19 @@ class InferenceConsumer(WebsocketConsumer):
         )
 
     def disconnect(self, close_code):
-        print(f"WebSocket disconnected: {close_code}")
+
+        logger.info("WebSocket Disconnected")
 
     def receive(self, text_data):
+
+        logger.info(f"WebSocket Received: {text_data}")
+
         self.send(
             text_data=json.dumps(
                 {
                     "status": "success",
-                    "received": text_data
+                    "message": "Message received.",
+                    "data": text_data
                 }
             )
         )
